@@ -4,7 +4,7 @@ name			:= "xsbt-util"
 
 organization	:= "de.djini"
 
-version			:= "0.2.0"
+version			:= "0.3.0"
 
 scalacOptions	++= Seq(
 	"-deprecation",
@@ -18,6 +18,8 @@ scalacOptions	++= Seq(
 	// "-language:experimental.macros"
 	"-feature"
 )
+
+conflictManager	:= ConflictManager.strict
 
 libraryDependencies	++= Seq(
 	"org.apache.commons"	% "commons-compress"	% "1.8.1"	% "compile"

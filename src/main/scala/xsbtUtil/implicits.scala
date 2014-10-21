@@ -3,6 +3,7 @@ package xsbtUtil
 import sbt._
 
 import xsbtUtil.types._
+import xsbtUtil.util.file
 
 object implicits {
 	implicit class AnyExt[T](peer:T) {
@@ -23,13 +24,16 @@ object implicits {
 	}
 	
 	implicit class FileExt(peer:File) {
-		def putName(it:String):File				= peer.getParentFile / it
-		def modifyName(func:Endo[String]):File	= putName(func(peer.getName))
+		def guardExists:Option[File]			= file guardExists	peer
 		
-		def appendSuffix(it:String):File		= modifyName(_ + it)
+		def putName(it:String):File				= file putName		it		apply peer
+		def modifyName(func:Endo[String]):File	= file modifyName	func	apply peer
+		def appendSuffix(it:String):File		= file appendSuffix	it		apply peer
 		
-		def mkParentDirs():Unit			= peer.getParentFile.mkdirs()
-		def guardExists:Option[File]	= peer guardBy { _.exists }
+		def parentDir:Option[File]				= file parentDir	peer
+		def parentDirs:Seq[File]				= file parentDirs	peer
+		
+		def mkParentDirs():Unit					= file mkParentDirs	peer
 	}
 	
 	// TODO this is Using.resource
