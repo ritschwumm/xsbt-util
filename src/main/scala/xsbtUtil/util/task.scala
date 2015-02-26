@@ -11,8 +11,8 @@ object task {
 						case _				=> Def.task { accu }
 					}
 				}
-		Def.taskDyn { 
-			sequence(key.value) 
+		Def.taskDyn {
+			sequence(key.value)
 		}
 	}
 }

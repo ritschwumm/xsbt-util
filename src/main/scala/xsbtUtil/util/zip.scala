@@ -68,4 +68,4 @@ object zip {
 	
 	def pathDirs(path:String):Seq[String]	= 
 			(path split "/").init.inits.toList.init.reverse map { _ mkString ("", "/", "/") }
-}                                                                         
+}

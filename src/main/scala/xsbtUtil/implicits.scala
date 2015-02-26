@@ -43,15 +43,15 @@ object implicits {
 			try {
 				func(peer)
 			}
-			catch { case e:Throwable	=> 
+			catch { case e:Throwable	=>
 				thrown	= true
 				throw e
 			}
 			finally {
-				try { 
+				try {
 					peer.close()
 				}
-				catch { case e:Throwable	=> 
+				catch { case e:Throwable	=>
 					if (!thrown)	throw e
 				}
 			}

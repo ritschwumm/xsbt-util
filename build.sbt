@@ -1,10 +1,8 @@
 sbtPlugin		:= true
 
 name			:= "xsbt-util"
-
 organization	:= "de.djini"
-
-version			:= "0.3.0"
+version			:= "0.4.0"
 
 scalacOptions	++= Seq(
 	"-deprecation",
@@ -16,12 +14,11 @@ scalacOptions	++= Seq(
 	// "-language:dynamics",
 	// "-language:postfixOps",
 	// "-language:experimental.macros"
-	"-feature"
+	"-feature",
+	"-Xfatal-warnings"
 )
 
 conflictManager	:= ConflictManager.strict
-
 libraryDependencies	++= Seq(
-	"org.apache.commons"	% "commons-compress"	% "1.8.1"	% "compile"
+	"org.apache.commons"	% "commons-compress"	% "1.9"	% "compile"
 )
-
