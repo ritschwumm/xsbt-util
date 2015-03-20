@@ -23,7 +23,7 @@ object zip {
 	
 	/** paths must use a forward slash, unix mode is optional, symlinks are ignored */
 	def create(sources:Traversable[PathMapping], outputZip:File):Unit	=
-			new ZipArchiveOutputStream(outputZip) use { outputStream => 
+			new ZipArchiveOutputStream(outputZip) use { outputStream =>
 				// outputStream	setMethod	ZipOutputStream.DEFLATED
 				// outputStream	setLevel	0
 				val sourceDirectories		= sources filter (pathMapping.getFile andThen filter.isDirectory)
@@ -48,7 +48,7 @@ object zip {
 					outputStream.closeArchiveEntry()
 				}
 				
-				sourceFiles foreach { case (file, path) => 
+				sourceFiles foreach { case (file, path) =>
 					val entry	= new ZipArchiveEntry(path)
 					entry	setMethod	ZipEntry.STORED
 					entry	setSize		file.length
@@ -66,6 +66,6 @@ object zip {
 				outputZip
 			}
 	
-	def pathDirs(path:String):Seq[String]	= 
+	def pathDirs(path:String):Seq[String]	=
 			(path split "/").init.inits.toList.init.reverse map { _ mkString ("", "/", "/") }
 }

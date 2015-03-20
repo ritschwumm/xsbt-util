@@ -1,8 +1,11 @@
 package xsbtUtil
 
+import scala.collection.immutable.{ Seq => ISeq }
+
 import sbt._
 
 import xsbtUtil.types._
+import xsbtUtil.data._
 import xsbtUtil.util.file
 
 object implicits {
@@ -16,6 +19,50 @@ object implicits {
 			
 		def preventBy(pred:Predicate[T]):Option[T]	=
 				guardBy { it => !pred(it) }
+			
+		def nes:Nes[T]	=
+				Nes single peer
+	}
+	
+	implicit class BooleanExt(peer:Boolean) {
+		def safeGuard[F](problems: =>Nes[F]):Safe[F,Unit]	=
+				if (peer)	Safe win (())
+				else		Safe fail problems
+			
+		def safePrevent[F](problems: =>Nes[F]):Safe[F,Unit]	=
+				if (peer)	Safe fail problems
+				else		Safe win (())
+	}
+	
+	implicit class OptionExt[T](peer:Option[T]) {
+		def getOrError(s:String)	= peer getOrElse (sys error s)
+		
+		def cata[X](none: => X, some:T => X):X =
+				peer match {
+					case Some(x)	=> some(x)
+					case None		=> none
+				}
+				
+		def toSafe[F](problems: =>Nes[F]):Safe[F,T]	=
+				peer match {
+					case Some(x)	=> Safe win x
+					case None		=> Safe fail problems
+				}
+	}
+	
+	implicit class ISeqExt[T](peer:ISeq[T]) {
+		def preventing[W](value: =>W):Safe[T,W]	=
+				Nes fromISeq peer map fail getOrElse (Safe win value)
+			
+		def traverseSafe[F,U](func:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
+				Safe traverseISeq func apply peer
+			
+		def toNesOption:Option[Nes[T]]	=
+				Nes fromISeq peer
+	}
+	
+	implicit class StringContextExt(peer:StringContext) {
+		def so(args:String*):String		= peer.s(args:_*)
 	}
 	
 	implicit class StringExt(peer:String) {

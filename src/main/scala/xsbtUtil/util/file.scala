@@ -6,7 +6,7 @@ import sbt._
 import xsbtUtil.implicits._
 
 object file {
-	val guardExists:File=>Option[File]	= 
+	val guardExists:File=>Option[File]	=
 			_ guardBy { _.exists }
 	
 	def putName(it:String):Endo[File]	=
