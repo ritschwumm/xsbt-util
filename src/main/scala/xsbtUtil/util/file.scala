@@ -4,6 +4,7 @@ import java.nio.charset.Charset
 
 import sbt._
 import xsbtUtil.implicits._
+import xsbtUtil.types._
 
 object file {
 	val guardExists:File=>Option[File]	=
@@ -29,6 +30,14 @@ object file {
 		val parent	= file.getParentFile
 		if (parent != null)	parent +: parentDirs(parent)
 		else				Vector.empty
+	}
+	
+	/** mirror files into a target directory removing everything not there before */
+	def mirror(targetDir:File, assets:Traversable[PathMapping]):Traversable[FileMapping]	= {
+		val toCopy	= assets map (pathMapping anchorTo targetDir)
+		val copied	= IO copy toCopy
+		cleanupDir(targetDir, copied)
+		toCopy
 	}
 	
 	/** deletes everything from dir that is not in the keep set or one of its ancestors */
