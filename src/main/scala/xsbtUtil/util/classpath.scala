@@ -1,9 +1,10 @@
 package xsbtUtil.util
 
 import java.io._
+import java.net.URL
 import java.nio.charset.Charset
 
-import sbt._
+import sbt.io._
 
 import xsbtUtil.implicits._
 import xsbtUtil.types._

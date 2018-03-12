@@ -52,7 +52,7 @@ object implicits {
 	
 	implicit class ISeqExt[T](peer:ISeq[T]) {
 		def preventing[W](value: =>W):Safe[T,W]	=
-				Nes fromISeq peer map fail getOrElse (Safe win value)
+				Nes fromISeq peer map Safe.fail getOrElse (Safe win value)
 			
 		def traverseSafe[F,U](func:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
 				Safe traverseISeq func apply peer

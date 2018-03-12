@@ -20,5 +20,5 @@ object find {
 		
 	/** everything but the root directory */
 	def all(dir:File):Seq[File]	=
-			(dir.*** --- PathFinder(dir)).get
+			(dir.allPaths --- PathFinder(dir)).get
 }
