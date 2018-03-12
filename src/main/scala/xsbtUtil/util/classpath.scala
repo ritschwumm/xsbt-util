@@ -7,6 +7,7 @@ import sbt._
 
 import xsbtUtil.implicits._
 import xsbtUtil.types._
+import xsbtUtil.platform._
 
 object classpath {
 	private val defaultCharset	= IO.defaultCharset

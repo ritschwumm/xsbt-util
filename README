@@ -6,7 +6,7 @@ To build this code, get and install SBT from
 Build and publish the plugin:
     git clone git@github.com:ritschwumm/xsbt-util.git
     cd xsbt-util
-    sbt publish-local
+    sbt '^ publish-local'
 
 Add the plugin to your plugin project's build.sbt
     addSbtPlugin("de.djini" % "xsbt-util"   % <version>)

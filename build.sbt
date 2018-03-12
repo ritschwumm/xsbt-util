@@ -22,3 +22,5 @@ conflictManager	:= ConflictManager.strict
 libraryDependencies	++= Seq(
 	"org.apache.commons"	% "commons-compress"	% "1.14"	% "compile"
 )
+
+crossSbtVersions := Seq("1.1.1", "0.13.16")
