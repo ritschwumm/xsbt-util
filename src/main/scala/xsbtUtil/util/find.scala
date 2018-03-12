@@ -4,6 +4,7 @@ import sbt._
 
 import xsbtUtil.types._
 import xsbtUtil.util.filter._
+import xsbtUtil.platform._
 
 object find {
 	/** like allSubpaths but without directories or flattening */
@@ -20,5 +21,5 @@ object find {
 		
 	/** everything but the root directory */
 	def all(dir:File):Seq[File]	=
-			(dir.*** --- PathFinder(dir)).get
+			(PathFinder(dir).allPaths --- PathFinder(dir)).get
 }
