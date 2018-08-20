@@ -57,8 +57,16 @@ object implicits {
 		def traverseSafe[F,U](func:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
 				Safe traverseISeq func apply peer
 			
+		def sequenceSafe[F,U](implicit ev:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
+				traverseSafe(ev)
+			
 		def toNesOption:Option[Nes[T]]	=
 				Nes fromISeq peer
+			
+		def zipBy[U](func:T=>U):ISeq[(T,U)]	=
+				peer map { it =>
+					it	-> func(it)
+				}
 	}
 	
 	implicit class StringContextExt(peer:StringContext) {
