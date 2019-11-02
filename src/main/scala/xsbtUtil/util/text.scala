@@ -9,10 +9,10 @@ import xsbtUtil.types._
 
 object text {
 	private val StripRE	= """^\s*\|\t(.*)$""".r
-		
+
 	def stripped(s:String):String	=
 			s.getLines collect { case StripRE(it) => it } mkString "\n"
-		
+
 	def untab(width:Int):Endo[String]	=
 			s => {
 				@tailrec

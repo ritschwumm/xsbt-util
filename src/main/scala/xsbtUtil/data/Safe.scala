@@ -7,18 +7,18 @@ object Safe {
 			new Safe[F,W] {
 				def cata[X](fail:Nes[F]=>X, win:W=>X):X	= win(value)
 			}
-			
+
 	def fail[F,W](problems:Nes[F]):Safe[F,W]	=
 			new Safe[F,W] {
 				def cata[X](fail:Nes[F]=>X, win:W=>X):X	= fail(problems)
 			}
-		
+
 	/*
 	def catchException[W](block: =>W):Safe[Exception,W]	=
 			try { win(block) }
 			catch { case e:Exception => fail(e.nes) }
 	*/
-		
+
 	def traverseISeq[F,S,T](func:S=>Safe[F,T]):ISeq[S]=>Safe[F,ISeq[T]]	=
 			ss	=> {
 				(ss map func foldLeft win[F,ISeq[T]](Vector.empty[T])) { (old, cur) =>
@@ -32,26 +32,26 @@ object Safe {
 
 sealed trait Safe[+F,+W] {
 	def cata[X](fail:Nes[F]=>X, win:W=>X):X
-	
+
 	def isWin:Boolean	= cata(_ => false, _ => true)
 	def isFail:Boolean	= !isWin
-	
+
 	def foreach(func:W=>Unit) {
 		cata(_ => (), func)
 	}
-	
+
 	def map[U](func:W=>U):Safe[F,U]	=
 			cata(
 				Safe.fail,
 				func andThen Safe.win
 			)
-			
+
 	def flatMap[FF>:F,U](func:W=>Safe[FF,U]):Safe[FF,U]	=
 			cata(
 				Safe.fail,
 				func
 			)
-			
+
 	def zip[FF>:F,U](that:Safe[FF,U]):Safe[FF,(W,U)]	=
 			this cata (
 				thisProblems	=> {
@@ -67,7 +67,7 @@ sealed trait Safe[+F,+W] {
 					)
 				}
 			)
-			
+
 	def toOption:Option[W]	=
 			cata(
 				_ => None,
