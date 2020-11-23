@@ -12,8 +12,8 @@ object filter {
 	val isDirectory:Predicate[File]	= _.isDirectory
 
 	def filePredicate(filter:FileFilter):File=>Boolean	=
-			filter.accept
+		filter.accept
 
 	def fileFilter(predicate:File=>Boolean):FileFilter	=
-			new SimpleFileFilter(predicate)
+		new SimpleFileFilter(predicate)
 }

@@ -15,11 +15,11 @@ object pathMapping {
 
 	// this is Mapper.flat, but total
 	val flatFile:File=>PathMapping	=
-			_ firstBy (_.getName)
+		_ firstBy (_.getName)
 
 	def anchorTo(targetDir:File):PathMapping=>FileMapping	=
-			second modify (targetDir / _)
+		second modify (targetDir / _)
 
 	def prefixPath(prefix:String):Endo[PathMapping]	=
-			modifyPath(prefix + "/" + _)
+		modifyPath(prefix + "/" + _)
 }

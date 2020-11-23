@@ -14,59 +14,59 @@ object implicits {
 		def secondBy[U](func:T=>U):(U,T)	= (func(peer), peer)
 
 		def guardBy(pred:Predicate[T]):Option[T]	=
-				if (pred(peer))	Some(peer)
-				else			None
+			if (pred(peer))	Some(peer)
+			else			None
 
 		def preventBy(pred:Predicate[T]):Option[T]	=
-				guardBy { it => !pred(it) }
+			guardBy { it => !pred(it) }
 
 		def nes:Nes[T]	=
-				Nes single peer
+			Nes single peer
 	}
 
 	implicit class BooleanExt(peer:Boolean) {
 		def safeGuard[F](problems: =>Nes[F]):Safe[F,Unit]	=
-				if (peer)	Safe win (())
-				else		Safe fail problems
+			if (peer)	Safe win (())
+			else		Safe fail problems
 
 		def safePrevent[F](problems: =>Nes[F]):Safe[F,Unit]	=
-				if (peer)	Safe fail problems
-				else		Safe win (())
+			if (peer)	Safe fail problems
+			else		Safe win (())
 	}
 
 	implicit class OptionExt[T](peer:Option[T]) {
 		def getOrError(s:String)	= peer getOrElse (sys error s)
 
 		def cata[X](none: => X, some:T => X):X =
-				peer match {
-					case Some(x)	=> some(x)
-					case None		=> none
-				}
+			peer match {
+				case Some(x)	=> some(x)
+				case None		=> none
+			}
 
 		def toSafe[F](problems: =>Nes[F]):Safe[F,T]	=
-				peer match {
-					case Some(x)	=> Safe win x
-					case None		=> Safe fail problems
-				}
+			peer match {
+				case Some(x)	=> Safe win x
+				case None		=> Safe fail problems
+			}
 	}
 
 	implicit class ISeqExt[T](peer:ISeq[T]) {
 		def preventing[W](value: =>W):Safe[T,W]	=
-				Nes fromISeq peer map Safe.fail getOrElse (Safe win value)
+			Nes fromISeq peer map Safe.fail getOrElse (Safe win value)
 
 		def traverseSafe[F,U](func:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
-				Safe traverseISeq func apply peer
+			Safe traverseISeq func apply peer
 
 		def sequenceSafe[F,U](implicit ev:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
-				traverseSafe(ev)
+			traverseSafe(ev)
 
 		def toNesOption:Option[Nes[T]]	=
-				Nes fromISeq peer
+			Nes fromISeq peer
 
 		def zipBy[U](func:T=>U):ISeq[(T,U)]	=
-				peer map { it =>
-					it	-> func(it)
-				}
+			peer map { it =>
+				it	-> func(it)
+			}
 	}
 
 	implicit class StringContextExt(peer:StringContext) {
@@ -75,7 +75,7 @@ object implicits {
 
 	implicit class StringExt(peer:String) {
 		def getLines:Seq[String]	=
-				(peer:scala.collection.immutable.WrappedString).lines.toVector
+			(peer:scala.collection.immutable.WrappedString).lines.toVector
 	}
 
 	implicit class FileExt(peer:File) {

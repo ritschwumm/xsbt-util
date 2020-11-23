@@ -13,5 +13,5 @@ object fileMapping {
 	def modifyTarget(func:File=>File):Endo[FileMapping]	= second	modify func
 
 	def flatTo(targetDir:File):File=>FileMapping	=
-			_ firstBy (targetDir / _.getName)
+		_ firstBy (targetDir / _.getName)
 }

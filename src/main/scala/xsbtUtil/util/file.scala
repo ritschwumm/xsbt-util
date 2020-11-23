@@ -8,22 +8,22 @@ import xsbtUtil.types._
 
 object file {
 	val guardExists:File=>Option[File]	=
-			_ guardBy { _.exists }
+		_ guardBy { _.exists }
 
 	def putName(it:String):Endo[File]	=
-			_.getParentFile / it
+		_.getParentFile / it
 
 	def modifyName(func:Endo[String]):Endo[File]	=
-			file => putName(func(file.getName))(file)
+		file => putName(func(file.getName))(file)
 
 	def appendSuffix(it:String):Endo[File]	=
-			modifyName(_ + it)
+		modifyName(_ + it)
 
 	def mkParentDirs(file:File):Unit	=
-			parentDir(file) foreach { _.mkdirs() }
+		parentDir(file) foreach { _.mkdirs() }
 
 	def parentDir(file:File):Option[File]	=
-			Option(file.getParentFile)
+		Option(file.getParentFile)
 
 	/** ancestor chain without the given file itself, from leaf to root */
 	def parentDirs(file:File):Seq[File]	= {
@@ -50,5 +50,5 @@ object file {
 	}
 
 	def patch(from:File, to:File, charset:Charset = IO.defaultCharset)(func:String=>String):Unit	=
-			IO write (to, func(IO read (from, charset)), charset)
+		IO write (to, func(IO read (from, charset)), charset)
 }
