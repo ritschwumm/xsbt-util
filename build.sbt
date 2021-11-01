@@ -1,8 +1,12 @@
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
+ThisBuild / versionScheme := Some("early-semver")
+
 sbtPlugin		:= true
 
 name			:= "xsbt-util"
 organization	:= "de.djini"
-version			:= "1.5.0"
+version			:= "1.6.0"
 
 scalacOptions	++= Seq(
 	"-feature",
@@ -13,5 +17,5 @@ scalacOptions	++= Seq(
 
 conflictManager		:= ConflictManager.strict withOrganization "^(?!(org\\.scala-lang|org\\.scala-js|org\\.scala-sbt)(\\..*)?)$"
 libraryDependencies	++= Seq(
-	"org.apache.commons"	% "commons-compress"	% "1.20"	% "compile"
+	"org.apache.commons"	% "commons-compress"	% "1.21"	% "compile"
 )

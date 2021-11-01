@@ -18,6 +18,7 @@ object script {
 	def systemProperties(it:Map[String,String]):Seq[String]	=
 		it.toVector map systemProperty
 
-	val systemProperty:((String,String))=>String	=
-		{ case (key:String, value:String) => s"-D${key}=${value}" }
+	val systemProperty:((String,String))=>String	= {
+		case (key, value) => s"-D${key}=${value}"
+	}
 }

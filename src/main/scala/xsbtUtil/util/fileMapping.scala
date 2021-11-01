@@ -6,11 +6,11 @@ import xsbtUtil.implicits._
 import xsbtUtil.types._
 
 object fileMapping {
-	val getSource:FileMapping=>File	= first.get
-	val getTarget:FileMapping=>File	= second.get
+	val getSource:FileMapping=>File	= _._1
+	val getTarget:FileMapping=>File	= _._2
 
-	def modifySource(func:File=>File):Endo[FileMapping]	= first		modify func
-	def modifyTarget(func:File=>File):Endo[FileMapping]	= second	modify func
+	def modifySource(func:File=>File):Endo[FileMapping]	= { case (source, target) => (func(source), target) }
+	def modifyTarget(func:File=>File):Endo[FileMapping]	= { case (source, target) => (source, func(target)) }
 
 	def flatTo(targetDir:File):File=>FileMapping	=
 		_ firstBy (targetDir / _.getName)

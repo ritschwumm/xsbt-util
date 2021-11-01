@@ -21,7 +21,7 @@ object implicits {
 			guardBy { it => !pred(it) }
 
 		def nes:Nes[T]	=
-			Nes single peer
+			Nes one peer
 	}
 
 	implicit class BooleanExt(peer:Boolean) {
@@ -50,6 +50,10 @@ object implicits {
 			}
 	}
 
+	implicit class EitherToSafeExt[E,T](peer:Either[Nes[E],T]) {
+		def toSafe:Safe[E,T]	= Safe fromEither peer
+	}
+
 	implicit class ISeqExt[T](peer:ISeq[T]) {
 		def preventing[W](value: =>W):Safe[T,W]	=
 			Nes fromISeq peer map Safe.fail getOrElse (Safe win value)
@@ -57,7 +61,7 @@ object implicits {
 		def traverseSafe[F,U](func:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
 			Safe traverseISeq func apply peer
 
-		def sequenceSafe[F,U](implicit ev:T=>Safe[F,U]):Safe[F,ISeq[U]]	=
+		def sequenceSafe[F,U](implicit ev:T <:< Safe[F,U]):Safe[F,ISeq[U]]	=
 			traverseSafe(ev)
 
 		def toNesOption:Option[Nes[T]]	=
@@ -91,15 +95,15 @@ object implicits {
 		def mkParentDirs():Unit					= file mkParentDirs	peer
 	}
 
-	// TODO this is Using.resource
+	// NOTE this is quite similar to Using.resource
 	implicit class AutoCloseableExt[S<:AutoCloseable](peer:S) {
 		def use[T](func:S=>T):T	= {
-			var thrown	= false
+			var primary:Throwable	= null
 			try {
 				func(peer)
 			}
 			catch { case e:Throwable	=>
-				thrown	= true
+				primary	= e
 				throw e
 			}
 			finally {
@@ -107,7 +111,8 @@ object implicits {
 					peer.close()
 				}
 				catch { case e:Throwable	=>
-					if (!thrown)	throw e
+					if (primary ne null)	primary addSuppressed e
+					else					throw e
 				}
 			}
 		}

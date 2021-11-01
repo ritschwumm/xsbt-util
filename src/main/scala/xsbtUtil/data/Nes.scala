@@ -3,10 +3,10 @@ package xsbtUtil.data
 import scala.collection.immutable.{ Seq => ISeq }
 
 object Nes {
-	def single[T](head:T):Nes[T]	=
+	def one[T](head:T):Nes[T]	=
 		Nes(head, ISeq.empty)
 
-	def many[T](head:T, tail:T*):Nes[T]	=
+	def of[T](head:T, tail:T*):Nes[T]	=
 		Nes(head, tail.toVector)
 
 	def fromISeq[T](it:ISeq[T]):Option[Nes[T]]	=
@@ -76,13 +76,20 @@ case class Nes[+T](head:T, tail:ISeq[T]) {
 	def map[U](func:T=>U):Nes[U]	=
 		Nes(func(head), tail map func)
 
+	def map2[U,V](that:Nes[U])(func:(T,U)=>V):Nes[V]	=
+		for {
+			here	<-	this
+			there	<-	that
+		}
+		yield func(here, there)
+
 	def flatMap[U](func:T=>Nes[U]):Nes[U]	= {
 		val Nes(h, t)	= func(head)
 		val tt			= tail flatMap { it => func(it).toISeq }
 		Nes(h, t ++ tt)
 	}
 
-	def flatten[U](implicit ev:T=>Nes[U]):Nes[U]	=
+	def flatten[U](implicit ev:T <:< Nes[U]):Nes[U]	=
 		flatMap(ev)
 
 	def zip[U](that:Nes[U]):Nes[(T,U)]	=
@@ -91,11 +98,7 @@ case class Nes[+T](head:T, tail:ISeq[T]) {
 			this.tail zip that.tail
 		)
 
-	@deprecated("use map2", "1.5.0")
 	def zipWith[U,V](that:Nes[U])(func:(T,U)=>V):Nes[V]	=
-		map2(that)(func)
-
-	def map2[U,V](that:Nes[U])(func:(T,U)=>V):Nes[V]	=
 		Nes(
 			func(this.head, that.head),
 			(this.tail zip that.tail) map func.tupled
